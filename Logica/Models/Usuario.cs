@@ -44,7 +44,7 @@ namespace Logica.Models
             MiCnn.ListaParametros.Add(new SqlParameter("@IDUsuarioRol", this.MiUsuarioRol.IDUsuarioRol));
             MiCnn.ListaParametros.Add(new SqlParameter("@Empresa", this.MiEmpresa.IDEmpresa));
 
-            int Resultado = MiCnn.EjecutarUpdateDeleteInsert("SPUsuarioConsultarEmail");
+            int Resultado = MiCnn.EjecutarUpdateDeleteInsert("SPUsuarioAgregar");
 
             if (Resultado > 0)
             {
@@ -81,7 +81,7 @@ namespace Logica.Models
 
             Conexion MiCnn = new Conexion();
 
-            MiCnn.ListaParametros.Add(new SqlParameter("@Cedula",this.Cedula));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Cedula", this.Cedula));
 
             DataTable Consulta = MiCnn.EjecutarSelect("SPUsuarioConsultarCedula");
 
@@ -129,20 +129,21 @@ namespace Logica.Models
             return R;
         }
 
-        public DataTable ListarActivos()
+        public DataTable Listar(bool VerActivos = true,string Busqueda = "")
         {
             DataTable R = new DataTable();
 
+            Conexion MiCnn = new Conexion();
 
+            MiCnn.ListaParametros.Add(new SqlParameter("@VerActivos", VerActivos));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Busqueda", Busqueda));
 
-            return R;
-        }
+            DataTable Consulta = MiCnn.EjecutarSelect("SPUsuarioListar");
 
-        public DataTable ListarInactivos()
-        {
-            DataTable R = new DataTable();
-
-
+            if (Consulta != null && Consulta.Rows.Count > 0)
+            {
+                R = Consulta;
+            }
 
             return R;
         }
