@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -133,7 +134,31 @@ namespace P620223_JosueVargasAlvarez.Formularios
                 CboxRol.SelectedIndex > -1
                 )
             {
-                R = true;
+                if (
+                    Regex.Match(TxtCorreo.Text.Trim(), "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$").Success
+                )
+                {
+
+                    if (
+                        Regex.Match(TxtContrasena.Text.Trim(), "^(?=.*\\d)(?=.*[\\u0021-\\u002b\\u003c-\\u0040])(?=.*[A-Z])(?=.*[a-z])\\S{8,16}$").Success
+                        )
+                    {
+                        R = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("La contraseña no respeta el patron", "Atencion", MessageBoxButtons.OK);
+                    }
+
+
+                    
+                }
+                else
+                {
+                    MessageBox.Show("Debe ingresar un correo valido", "Atencion", MessageBoxButtons.OK);
+                }
+
+                
             }
             else
             {
@@ -178,6 +203,11 @@ namespace P620223_JosueVargasAlvarez.Formularios
         private void TxtBuscar_TextChanged(object sender, EventArgs e)
         {
             DgvLista.DataSource = MiUsuarioLocal.Listar(CbVerActivos.Checked, TxtBuscar.Text.Trim());
+        }
+
+        private void BtnVer_Click(object sender, EventArgs e)
+        {
+            TxtContrasena.UseSystemPasswordChar = !TxtContrasena.UseSystemPasswordChar;
         }
     }
 }
