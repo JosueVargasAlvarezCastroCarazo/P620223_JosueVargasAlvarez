@@ -58,6 +58,24 @@ namespace Logica.Models
         {
             bool R = false;
 
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@Id", this.IDUsuario));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Nombre", this.Nombre));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Cedula", this.Cedula));
+            MiCnn.ListaParametros.Add(new SqlParameter("@NombreUsuario", this.NombreUsuario));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Contrasennia", this.Contrasennia));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Email", this.Email));
+            MiCnn.ListaParametros.Add(new SqlParameter("@IDUsuarioRol", this.MiUsuarioRol.IDUsuarioRol));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Empresa", this.MiEmpresa.IDEmpresa));
+
+            int Resultado = MiCnn.EjecutarUpdateDeleteInsert("SPUsuarioActualizar");
+
+            if (Resultado > 0)
+            {
+                R = true;
+            }
+
             return R;
         }
 
@@ -65,12 +83,43 @@ namespace Logica.Models
         {
             bool R = false;
 
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@Id", this.IDUsuario));
+
+            int Resultado = MiCnn.EjecutarUpdateDeleteInsert("SPUsuarioEliminar");
+
+            if (Resultado > 0)
+            {
+                R = true;
+            }
+
             return R;
         }
 
         public Usuario ConsultarPorID()
         {
             Usuario R = new Usuario();
+
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@IdUsuario", this.IDUsuario));
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPUsuarioConsultarId");
+
+            if (Consulta != null && Consulta.Rows.Count > 0)
+            {
+                DataRow Fila = Consulta.Rows[0];
+                R.IDUsuario = (int)Fila["IdUsuario"];
+                R.Nombre = (string)Fila["Nombre"];
+                R.Cedula = (string)Fila["Cedula"];
+                R.NombreUsuario = (string)Fila["NombreUsuario"];
+                //R.Contrasennia = (string)Fila["Contrasennia"];
+                R.Email = (string)Fila["Email"];
+                R.MiUsuarioRol.IDUsuarioRol = (int)Fila["IdUsuarioRol"];
+                R.MiEmpresa.IDEmpresa = (int)Fila["IdEmpresa"];
+                R.Activo = (bool)Fila["Activo"];
+            }
 
             return R;
         }
