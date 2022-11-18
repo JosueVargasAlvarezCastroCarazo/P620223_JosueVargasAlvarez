@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logica.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,8 +40,29 @@ namespace P620223_JosueVargasAlvarez.Formularios
 
         private void BtnIngresar_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            Globales.MiFromPrincipal.Show();
+            Usuario MiUsuario = new Usuario();
+
+            if (string.IsNullOrEmpty(TxtNombreUsuario.Text.Trim()) || string.IsNullOrEmpty(TxtContra.Text.Trim()))
+            {
+                MessageBox.Show("Debe ingresar todos los campos", "Atencion", MessageBoxButtons.OK);
+            }
+            else
+            {
+
+                Globales.MiUsuario = MiUsuario.ValidarLogin(TxtNombreUsuario.Text.Trim(), TxtContra.Text.Trim());
+
+                if (Globales.MiUsuario.IDUsuario > 0)
+                {
+                    this.Hide();
+                    Globales.MiFromPrincipal.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Problemas con el usuario o la contrasena", "Atencion", MessageBoxButtons.OK);
+                }
+            }
+
+            
         }
     }
 }

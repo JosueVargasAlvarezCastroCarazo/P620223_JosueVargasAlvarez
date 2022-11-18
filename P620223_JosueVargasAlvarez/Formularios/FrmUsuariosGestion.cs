@@ -304,7 +304,7 @@ namespace P620223_JosueVargasAlvarez.Formularios
                 MiUsuarioLocal.Cedula = TxtCedula.Text.Trim();
                 MiUsuarioLocal.NombreUsuario = TxtNombreUsuario.Text.Trim();
                 MiUsuarioLocal.Email = TxtCorreo.Text.Trim();
-               // MiUsuarioLocal.Contrasennia = TxtContrasena.Text.Trim();
+                MiUsuarioLocal.Contrasennia = TxtContrasena.Text.Trim();
                 MiUsuarioLocal.MiUsuarioRol.IDUsuarioRol = (int)CboxRol.SelectedValue;
                 MiUsuarioLocal.MiEmpresa.IDEmpresa = (int)CboxEmpresa.SelectedValue;
 

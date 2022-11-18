@@ -1,4 +1,5 @@
-﻿using System;
+﻿using P620223_JosueVargasAlvarez;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -39,7 +40,7 @@ namespace Logica.Models
             MiCnn.ListaParametros.Add(new SqlParameter("@Nombre", this.Nombre));
             MiCnn.ListaParametros.Add(new SqlParameter("@Cedula", this.Cedula));
             MiCnn.ListaParametros.Add(new SqlParameter("@NombreUsuario", this.NombreUsuario));
-            MiCnn.ListaParametros.Add(new SqlParameter("@Contrasennia", this.Contrasennia));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Contrasennia", new Encriptador().EncriptarEnUnSentido(this.Contrasennia)));
             MiCnn.ListaParametros.Add(new SqlParameter("@Email", this.Email));
             MiCnn.ListaParametros.Add(new SqlParameter("@IDUsuarioRol", this.MiUsuarioRol.IDUsuarioRol));
             MiCnn.ListaParametros.Add(new SqlParameter("@Empresa", this.MiEmpresa.IDEmpresa));
@@ -64,7 +65,7 @@ namespace Logica.Models
             MiCnn.ListaParametros.Add(new SqlParameter("@Nombre", this.Nombre));
             MiCnn.ListaParametros.Add(new SqlParameter("@Cedula", this.Cedula));
             MiCnn.ListaParametros.Add(new SqlParameter("@NombreUsuario", this.NombreUsuario));
-            MiCnn.ListaParametros.Add(new SqlParameter("@Contrasennia", this.Contrasennia));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Contrasennia", new Encriptador().EncriptarEnUnSentido(this.Contrasennia)));
             MiCnn.ListaParametros.Add(new SqlParameter("@Email", this.Email));
             MiCnn.ListaParametros.Add(new SqlParameter("@IDUsuarioRol", this.MiUsuarioRol.IDUsuarioRol));
             MiCnn.ListaParametros.Add(new SqlParameter("@Empresa", this.MiEmpresa.IDEmpresa));
@@ -114,7 +115,7 @@ namespace Logica.Models
                 R.Nombre = (string)Fila["Nombre"];
                 R.Cedula = (string)Fila["Cedula"];
                 R.NombreUsuario = (string)Fila["NombreUsuario"];
-                //R.Contrasennia = (string)Fila["Contrasennia"];
+                R.Contrasennia = (string)Fila["Contrasennia"];
                 R.Email = (string)Fila["Email"];
                 R.MiUsuarioRol.IDUsuarioRol = (int)Fila["IdUsuarioRol"];
                 R.MiEmpresa.IDEmpresa = (int)Fila["IdEmpresa"];
@@ -197,12 +198,26 @@ namespace Logica.Models
             return R;
         }
 
-        public bool ValidarLogin(
+        public Usuario ValidarLogin(
             string NombreUsuario, 
             string Contrasennia
             )
         {
-            bool R = false;
+            Usuario R = new Usuario();
+
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@NombreUsuario", NombreUsuario));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Contra", new Encriptador().EncriptarEnUnSentido(Contrasennia)));
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPUsuarioLogin");
+
+            if (Consulta != null && Consulta.Rows.Count > 0)
+            {
+                DataRow Fila = Consulta.Rows[0];
+                R.IDUsuario = (int)Fila["IdUsuario"];
+                R = R.ConsultarPorID();
+            }
 
             return R;
         }
