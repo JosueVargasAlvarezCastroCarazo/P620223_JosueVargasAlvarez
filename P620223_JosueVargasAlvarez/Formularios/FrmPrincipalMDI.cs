@@ -71,7 +71,12 @@ namespace P620223_JosueVargasAlvarez.Formularios
 
         private void facturacionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (!Globales.MiFormFacturacion.Visible)
+            {
+                Globales.MiFormFacturacion = new Formularios.FrmFacturacion();
+                Globales.MiFormFacturacion.Show();
+            }
+            
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Logica.Models;
+using P620223_JosueVargasAlvarez.Formularios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace P620223_JosueVargasAlvarez
 
         public static Form MiFromPrincipal = new Formularios.FrmPrincipalMDI();
         public static Form MiFormMantenimientoUsuarios = new Formularios.FrmUsuariosGestion();
-        public static Form MiFormFacturacion = new Formularios.FrmFacturacion();
+        public static FrmFacturacion MiFormFacturacion = new Formularios.FrmFacturacion();
 
 
         public static Usuario MiUsuario = new Usuario();

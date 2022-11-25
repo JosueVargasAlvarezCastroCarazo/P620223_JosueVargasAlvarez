@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,5 +55,21 @@ namespace Logica.Models
 
             return R;
         }
+
+        public DataTable CargarSchemaListaDetalle(
+ 
+            )
+        {
+            DataTable R = new DataTable();
+
+            Conexion MiCnn = new Conexion();
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPFacturaDetalleSchema", true);
+            R = Consulta;
+            R.PrimaryKey = null;
+
+            return R;
+        }
+
     }
 }

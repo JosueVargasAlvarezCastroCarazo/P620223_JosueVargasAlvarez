@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,25 @@ namespace Logica.Models
         {
             Cliente R = new Cliente();
 
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@Id", this.IDCliente));
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPClienteConsultarId");
+
+            if (Consulta != null && Consulta.Rows.Count > 0)
+            {
+                DataRow Fila = Consulta.Rows[0];
+                R.IDCliente = (int)Fila["IdCliente"];
+                R.Cedula = (string)Fila["Cedula"];
+                R.Nombre = (string)Fila["Nombre"];
+                R.CorreoElectronico = (string)Fila["CorreoElectronico"];
+                R.Telefono = (string)Fila["Telefono"];
+                R.Direccion = (string)Fila["Direccion"];
+                R.Activo = (bool)Fila["Activo"];
+                R.MiEmpresa.IDEmpresa = (int)Fila["IDEmpresa"];
+            }
+
             return R;
         }
 
@@ -61,10 +81,19 @@ namespace Logica.Models
             return R;
         }
 
-        public DataTable Listar(bool VerActivos = true)
+        public DataTable Listar(bool VerActivos = true,string Busqueda = "")
         {
             DataTable R = new DataTable();
 
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@VerActivos", VerActivos));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Busqueda", Busqueda));
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPClienteListar");
+
+
+            R = Consulta;
 
 
             return R;
