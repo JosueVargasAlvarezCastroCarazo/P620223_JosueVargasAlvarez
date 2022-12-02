@@ -81,5 +81,17 @@ namespace P620223_JosueVargasAlvarez.Formularios
             DtListaitems = MiFactura.CargarSchemaListaDetalle();
             DgvLista.DataSource = DtListaitems;
         }
+
+        private void agregarProductoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form FormBusqueda = new FrmInventarioBuscar();
+
+            DialogResult Resp = FormBusqueda.ShowDialog();
+
+            if (Resp == DialogResult.OK)
+            {
+                DgvLista.DataSource = DtListaitems;
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,15 +69,6 @@ namespace Logica.Models
             return R;
         }
 
-        public DataTable Listar(bool VerActivos = true)
-        {
-            DataTable R = new DataTable();
-
-
-
-            return R;
-        }
-
         public DataTable ListarProveedores()
         {
             DataTable R = new DataTable();
@@ -103,6 +95,24 @@ namespace Logica.Models
         public bool ModificarPrecioProveedor()
         {
             bool R = false;
+
+            return R;
+        }
+
+        public DataTable Listar(bool VerActivos = true, string Busqueda = "")
+        {
+            DataTable R = new DataTable();
+
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@VerActivos", VerActivos));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Busqueda", Busqueda));
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPInventarioListar");
+
+
+            R = Consulta;
+
 
             return R;
         }
