@@ -68,6 +68,9 @@ namespace P620223_JosueVargasAlvarez.Formularios
 
         private void Limpiar()
         {
+
+            MiFactura = new Factura();
+
             TxtClienteId.Clear();
             LblClienteNombre.Text = "Cliente:";
             TxtNotas.Clear();
@@ -91,7 +94,102 @@ namespace P620223_JosueVargasAlvarez.Formularios
             if (Resp == DialogResult.OK)
             {
                 DgvLista.DataSource = DtListaitems;
+                TotalizarLista();
             }
+        }
+
+        private void TotalizarLista()
+        {
+            decimal Descuentos = 0;
+            decimal Impuestos = 0;
+            decimal SubTotal = 0;
+            decimal Total = 0;
+
+
+            if (DtListaitems.Rows.Count > 0)
+            {
+
+                foreach (DataRow item in DtListaitems.Rows)
+                {
+
+                    Descuentos += Convert.ToDecimal(item["DescuentoTotal"]);
+                    Impuestos += Convert.ToDecimal(item["ImpuestosTotal"]);
+                    SubTotal += Convert.ToDecimal(item["SubTotal"]);
+                    Total += Convert.ToDecimal(item["TotalLinea"]);
+                }
+
+                TxtDescuentos.Text = Descuentos.ToString();
+                TxtImpuestos.Text = Impuestos.ToString();
+                TxtSubTotal.Text = SubTotal.ToString();
+                TxtTotal.Text = Total.ToString();
+
+            }
+
+        }
+
+        private void BtnCrearFactura_Click(object sender, EventArgs e)
+        {
+
+            if (ValidarFactura())
+            {
+                MiFactura.MiFacturaTipo.IDFacturaTipo = Convert.ToInt32(CboFacturaTipo.SelectedValue);
+                MiFactura.MiCliente.IDCliente = Convert.ToInt32(TxtClienteId.Text.Trim());
+                MiFactura.MiUsuario.IDUsuario = Globales.MiUsuario.IDUsuario;
+                MiFactura.Notas = TxtNotas.Text.Trim();
+
+                CargarDetalleFactura();
+
+                if (MiFactura.Agregar() > 0 )
+                {
+                    MessageBox.Show("Factura agregada");
+                    Limpiar();
+                }
+
+            }
+
+        }
+
+
+        private void CargarDetalleFactura()
+        {
+            if (DtListaitems.Rows.Count > 0)
+            {
+
+                foreach (DataRow NuevaFila in DtListaitems.Rows)
+                {
+
+                    FacturaInventario Detalle = new FacturaInventario();
+
+                    Detalle.MiInventario.IDInventario = Convert.ToInt32(NuevaFila["IDInventario"]);
+                    Detalle.Costo = 0;
+                    Detalle.PrecioVenta = Convert.ToDecimal(NuevaFila["PrecioVenta"]);
+                    Detalle.Cantidad = Convert.ToInt32(NuevaFila["Cantidad"]);
+                    Detalle.PorcentajeImpuesto = Convert.ToDecimal(NuevaFila["TasaImpuesto"]);
+                    Detalle.PorcentajeDescuento = Convert.ToDecimal(NuevaFila["PorcentajeDescuento"]);
+                    Detalle.SubTotal = Convert.ToDecimal(NuevaFila["SubTotal"]);
+                    Detalle.DescuentoTotal = Convert.ToDecimal(NuevaFila["DescuentoTotal"]);
+                    Detalle.SubTotal2 = Convert.ToDecimal(NuevaFila["SubTotal2"]);
+                    Detalle.ImpuestosTotal = Convert.ToDecimal(NuevaFila["ImpuestosTotal"]);
+                    Detalle.TotalLinea = Convert.ToDecimal(NuevaFila["TotalLinea"]);
+
+                    MiFactura.Detalle.Add(Detalle);
+
+                }
+
+            }
+        }
+
+
+
+        private bool ValidarFactura()
+        {
+            if (!string.IsNullOrEmpty(LblClienteNombre.Text.Trim()) && CboFacturaTipo.SelectedIndex > -1 && DtListaitems.Rows.Count > 0)
+            {
+                return true;
+            }
+            //todo validar casos contrarios
+
+            return false;
         }
     }
 }

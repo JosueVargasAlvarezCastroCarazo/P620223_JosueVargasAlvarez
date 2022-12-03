@@ -303,7 +303,7 @@
             this.menuStripFacturacion.Location = new System.Drawing.Point(4, 22);
             this.menuStripFacturacion.Name = "menuStripFacturacion";
             this.menuStripFacturacion.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.menuStripFacturacion.Size = new System.Drawing.Size(469, 24);
+            this.menuStripFacturacion.Size = new System.Drawing.Size(349, 24);
             this.menuStripFacturacion.TabIndex = 0;
             this.menuStripFacturacion.Text = "menuStrip1";
             // 
@@ -355,6 +355,7 @@
             this.BtnCrearFactura.TabIndex = 8;
             this.BtnCrearFactura.Text = "Crear Factura";
             this.BtnCrearFactura.UseVisualStyleBackColor = true;
+            this.BtnCrearFactura.Click += new System.EventHandler(this.BtnCrearFactura_Click);
             // 
             // label7
             // 

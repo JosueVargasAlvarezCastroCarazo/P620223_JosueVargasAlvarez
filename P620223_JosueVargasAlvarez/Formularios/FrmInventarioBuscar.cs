@@ -22,6 +22,11 @@ namespace P620223_JosueVargasAlvarez.Formularios
         public decimal TotalImpuesto { get; set; }
         public decimal Total { get; set; }
 
+        public decimal Precio { get; set; }
+        public decimal Iva { get; set; }
+        public decimal Cantidad { get; set; }
+        public decimal Descuento { get; set; }
+
         public FrmInventarioBuscar()
         {
             InitializeComponent();
@@ -43,6 +48,10 @@ namespace P620223_JosueVargasAlvarez.Formularios
 
                 TxtIva.Text = Iva.ToString();
                 TxtPrecioUnidad.Text = Precio.ToString();
+                NUDCantidad.Value = 1;
+                TxtDescuento.Text = "0";
+
+                calcular();
 
             }
         }
@@ -53,6 +62,7 @@ namespace P620223_JosueVargasAlvarez.Formularios
             {
                 TxtDescuento.Text = "0";
             }
+            calcular();
         }
 
         private void TxtDescuento_Leave(object sender, EventArgs e)
@@ -68,7 +78,41 @@ namespace P620223_JosueVargasAlvarez.Formularios
 
         private void calcular()
         {
+            if (ValidarDescuento())
+            {
 
+                Precio = Convert.ToDecimal(TxtPrecioUnidad.Text.Trim());
+                Iva = Convert.ToDecimal(TxtIva.Text.Trim());
+                Cantidad = Convert.ToDecimal(NUDCantidad.Value);
+                Descuento = Convert.ToDecimal(TxtDescuento.Text.Trim());
+
+                SubTotal1 = Cantidad * Precio;
+
+                if (Descuento > 0)
+                {
+                    TotalDescuento = (SubTotal1 * Descuento) / 100;
+                }
+                else
+                {
+                    TotalDescuento = 0;
+                }
+
+                SubTotal2 = SubTotal1 - TotalDescuento;
+
+                if (Iva > 0)
+                {
+                    TotalImpuesto = (SubTotal2 * Iva) / 100;
+                }
+                else
+                {
+                    TotalImpuesto = 0;
+                }
+
+                Total = SubTotal2 + TotalImpuesto;
+
+                TxtTotal.Text = String.Format("{0:C2}",Total);
+
+            }
         }
 
         private bool ValidarDescuento()
@@ -80,9 +124,45 @@ namespace P620223_JosueVargasAlvarez.Formularios
                 R = true;
             }
 
-
             return R;
         }
 
+        private void NUDCantidad_ValueChanged(object sender, EventArgs e)
+        {
+            calcular();
+        }
+
+        private void BtnCancelar_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+        }
+
+        private void BtnSeleccionar_Click(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(TxtTotal.Text))
+            {
+                int IdItem = Convert.ToInt32(DgvLista.SelectedRows[0].Cells["CIDInventario"].Value);
+                String Nombre = Convert.ToString(DgvLista.SelectedRows[0].Cells["CNombreItem"].Value);
+
+                DataRow NuevaFila = Globales.MiFormFacturacion.DtListaitems.NewRow();
+
+                NuevaFila["IDInventario"] = IdItem;
+                NuevaFila["NombreItem"] = Nombre;
+                NuevaFila["PrecioVenta"] = Precio;
+                NuevaFila["Cantidad"] = Cantidad;
+                NuevaFila["TasaImpuesto"] = Iva;
+                NuevaFila["PorcentajeDescuento"] = Descuento;
+                NuevaFila["SubTotal"] = SubTotal1;
+                NuevaFila["DescuentoTotal"] = TotalDescuento;
+                NuevaFila["SubTotal2"] = SubTotal2;
+                NuevaFila["ImpuestosTotal"] = TotalImpuesto;
+                NuevaFila["TotalLinea"] = Total;
+
+                Globales.MiFormFacturacion.DtListaitems.Rows.Add(NuevaFila);
+
+                this.DialogResult = DialogResult.OK;
+            }
+
+        }
     }
 }
